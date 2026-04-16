@@ -28,12 +28,9 @@ public class AlbomServiceImpl implements AlbomService {
 
     @Override
     public AlbomResponseDto updateAlbom(Long id, AlbomRequestDto dto) {
-        // 1. DB-dən tap
         AlbomEntity entity = albomRepository.findById(id)
                 .orElseThrow(() -> new AlbomNotFoundException("Albom tapılmadı, id: " + id));
-        // 2. Mapper ilə update et
         albomMapper.updateAlbom(dto, entity);
-        // 3. Save et
         AlbomEntity saved = albomRepository.save(entity);
         return albomMapper.toDto(saved);
     }
