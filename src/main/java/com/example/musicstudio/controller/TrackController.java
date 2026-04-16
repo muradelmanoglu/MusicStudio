@@ -18,14 +18,12 @@ public class TrackController {
 
     private final TrackService trackService;
 
-    // POST /tracks
     @PostMapping
     public ResponseEntity<TrackResponseDto> create(@RequestBody TrackRequestDto dto) {
         TrackResponseDto created = trackService.createTrack(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // PUT /tracks/{id}
     @PutMapping("/{id}")
     public ResponseEntity<TrackResponseDto> update(@PathVariable Long id,
                                                    @RequestBody TrackRequestDto dto) {
@@ -33,7 +31,6 @@ public class TrackController {
         return ResponseEntity.ok(updated);
     }
 
-    // GET /tracks?page=0&size=10
     @GetMapping
     public ResponseEntity<Page<TrackResponseDto>> getAll(
             @RequestParam(defaultValue = "0") int page,
@@ -42,13 +39,11 @@ public class TrackController {
         return ResponseEntity.ok(trackService.findAll(pageable));
     }
 
-    // GET /tracks/{id}
     @GetMapping("/{id}")
     public ResponseEntity<TrackResponseDto> getById(@PathVariable Long id) {
         return ResponseEntity.ok(trackService.findById(id));
     }
 
-    // DELETE /tracks/{id}
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         trackService.deleteTrack(id);
