@@ -25,7 +25,6 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public TrackResponseDto createTrack(TrackRequestDto dto) {
-        // albomId ilə albom tapılır, tapılmazsa exception atılır
         AlbomEntity albom = albomRepository.findById(dto.albomId())
                 .orElseThrow(() -> new AlbomNotFoundException("Albom tapılmadı, id: " + dto.albomId()));
 
@@ -38,21 +37,16 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public TrackResponseDto updateTrack(Long id, TrackRequestDto dto) {
-        // 1. DB-dən tap
         TrackEntity entity = trackRepository.findById(id)
                 .orElseThrow(() -> new TrackNotFoundException("Track tapılmadı, id: " + id));
 
-        // 2. Mapper ilə update et
         trackMapper.updateTrack(dto, entity);
 
-        // 3. Əgər albomId dəyişibsə → yeni albom set et
         if (dto.albomId() != null && !dto.albomId().equals(entity.getAlbum().getId())) {
             AlbomEntity newAlbom = albomRepository.findById(dto.albomId())
                     .orElseThrow(() -> new AlbomNotFoundException("Albom tapılmadı, id: " + dto.albomId()));
             entity.setAlbum(newAlbom);
         }
-
-        // 4. Save et
         TrackEntity saved = trackRepository.save(entity);
         return trackMapper.toDto(saved);
     }
